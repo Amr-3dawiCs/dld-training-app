@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import { Globe } from "lucide-react";
 
 export default function Navbar({ language, setLanguage }) {
