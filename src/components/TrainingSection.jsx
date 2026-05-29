@@ -8,33 +8,16 @@ const oqoodModules = {
     "New Developer (7500 AED)",
     "Existing Developer (1050 AED)",
   ],
-
-  Inquiries: [
-    "Procedure Inquiry",
-    "General Inquiry",
-    "Property Inquiry",
-  ],
-
+  Inquiries: ["Procedure Inquiry", "General Inquiry", "Property Inquiry"],
   "Procedure Managements": [
     "Off-plan sell (Sell Pre-Registration)",
     "Procedure Modifications",
     "Project Completion Sell (Sale)",
     "Project Completion Sell (Delayed Sell)",
   ],
-
   "Property Survey": ["New Request", "Search"],
-
-  "Property Termination": [
-    "Power Of Attorney",
-    "Termination",
-    "Settlement",
-  ],
-
-  Reports: [
-    "Project Inquiry",
-    "Developer Title Deed",
-    "Project Report",
-  ],
+  "Property Termination": ["Power Of Attorney", "Termination", "Settlement"],
+  Reports: ["Project Inquiry", "Developer Title Deed", "Project Report"],
 };
 
 const tasModules = {
@@ -50,7 +33,6 @@ const tasModules = {
     "Request Monitor",
     "Transfer Project AC to AC",
   ],
-
   "Trust Account Requests": [
     "Project Registration",
     "Project Re-registration",
@@ -59,7 +41,8 @@ const tasModules = {
   ],
 };
 
-export default function TrainingSection() {
+export default function TrainingSection({ language }) {
+  const isAr = language === "ar";
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -84,13 +67,52 @@ export default function TrainingSection() {
     formData.selectedSystem === "TAS" ||
     formData.selectedSystem === "BOTH";
 
+  const inputClass =
+    "w-full p-4 rounded-xl bg-[#111827] border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:border-[#C8922E] transition";
+
+  const selectClass =
+    "w-full p-4 rounded-xl bg-[#111827] border border-white/10 text-white focus:outline-none focus:border-[#C8922E] transition";
+
+  const labelClass = "font-semibold text-slate-200";
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value,
+      [name]: value,
     });
+  };
+
+  const handlePhoneChange = (e) => {
+    const onlyNumbers = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setFormData({ ...formData, phone: onlyNumbers });
+  };
+
+  const handleEidChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 15);
+
+    let formatted = digits;
+
+    if (digits.length > 3) {
+      formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    }
+
+    if (digits.length > 7) {
+      formatted = `${digits.slice(0, 3)}-${digits.slice(
+        3,
+        7
+      )}-${digits.slice(7)}`;
+    }
+
+    if (digits.length > 14) {
+      formatted = `${digits.slice(0, 3)}-${digits.slice(
+        3,
+        7
+      )}-${digits.slice(7, 14)}-${digits.slice(14, 15)}`;
+    }
+
+    setFormData({ ...formData, eid: formatted });
   };
 
   const handleCheckbox = (type, value) => {
@@ -106,7 +128,7 @@ export default function TrainingSection() {
 
   const handleNext = () => {
     if (!formData.selectedSystem) {
-      alert("Please select the system.");
+      alert(isAr ? "يرجى اختيار النظام." : "Please select the system.");
       return;
     }
 
@@ -115,6 +137,27 @@ export default function TrainingSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const phoneRegex = /^[0-9]{10}$/;
+    const eidRegex = /^784-\d{4}-\d{7}-\d{1}$/;
+
+    if (!phoneRegex.test(formData.phone)) {
+      alert(
+        isAr
+          ? "رقم الهاتف يجب أن يتكون من 10 أرقام فقط."
+          : "Phone number must be exactly 10 numbers."
+      );
+      return;
+    }
+
+    if (!eidRegex.test(formData.eid)) {
+      alert(
+        isAr
+          ? "رقم الهوية يجب أن يكون بهذا الشكل: 784-xxxx-xxxxxxx-x"
+          : "EID must be in this format: 784-xxxx-xxxxxxx-x"
+      );
+      return;
+    }
 
     try {
       setLoading(true);
@@ -167,7 +210,11 @@ export default function TrainingSection() {
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
-      alert("Training Request Submitted Successfully!");
+      alert(
+        isAr
+          ? "تم إرسال طلب التدريب بنجاح!"
+          : "Training Request Submitted Successfully!"
+      );
 
       setFormData({
         selectedSystem: "",
@@ -185,7 +232,11 @@ export default function TrainingSection() {
       setStep(1);
     } catch (error) {
       console.error(error);
-      alert("Submission failed. Please check EmailJS or Firebase setup.");
+      alert(
+        isAr
+          ? "فشل إرسال الطلب. يرجى التحقق من الإعدادات."
+          : "Submission failed. Please check EmailJS or Firebase setup."
+      );
     } finally {
       setLoading(false);
     }
@@ -196,28 +247,24 @@ export default function TrainingSection() {
       {Object.entries(modules).map(([category, items]) => (
         <div
           key={category}
-          className="bg-white rounded-2xl p-5 border border-slate-200"
+          className="bg-[#111827] rounded-2xl p-5 border border-white/10"
         >
-          <h3 className="font-bold text-[#0b4f6c] mb-4">
-            {category}
-          </h3>
+          <h3 className="font-black text-white mb-4">{category}</h3>
 
           <div className="grid sm:grid-cols-2 gap-3">
             {items.map((item) => (
               <label
                 key={item}
-                className="flex gap-3 items-start bg-slate-50 p-3 rounded-xl border hover:border-[#01baef] cursor-pointer"
+                className="flex gap-3 items-start bg-[#0c1220] p-3 rounded-xl border border-white/10 hover:border-[#C8922E]/60 cursor-pointer text-slate-300 transition"
               >
                 <input
                   type="checkbox"
                   checked={formData[type].includes(item)}
                   onChange={() => handleCheckbox(type, item)}
-                  className="mt-1"
+                  className="mt-1 accent-[#C8922E]"
                 />
 
-                <span className="text-sm text-slate-700">
-                  {item}
-                </span>
+                <span className="text-sm">{item}</span>
               </label>
             ))}
           </div>
@@ -227,29 +274,50 @@ export default function TrainingSection() {
   );
 
   return (
-    <section id="training" className="py-16 sm:py-20 bg-slate-50 scroll-mt-24">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+    <section
+      id="training"
+      className="relative py-16 sm:py-24 bg-[#070b14] scroll-mt-24 overflow-hidden"
+      dir={isAr ? "rtl" : "ltr"}
+    >
+      <div className="absolute top-0 left-0 w-72 h-72 bg-[#6B3FA0]/15 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#A32116]/15 rounded-full blur-3xl" />
+
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-slate-500 mb-3">
-            Training Request
+          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#C8922E] bg-white/5 border border-[#C8922E]/20 rounded-full px-4 py-2 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#C8922E]" />
+            {isAr ? "طلب تدريب" : "Training Request"}
           </p>
 
-          <h2 className="text-3xl sm:text-4xl font-black text-[#1E293B] mb-4">
-            Ready to Train Your Team?
+          <h2 className="text-3xl sm:text-5xl font-black text-white mb-4">
+            {isAr ? (
+              <>
+                هل تحتاج إلى تدريب على{" "}
+                <span className="text-[#6B3FA0]">OQOOD</span>{" "}
+                أو <span className="text-[#E74C3C]">TAS</span>؟
+              </>
+            ) : (
+              <>
+                Ready for{" "}
+                <span className="text-[#6B3FA0]">OQOOD</span>{" "}
+                & <span className="text-[#E74C3C]">TAS</span>{" "}
+                Training?
+              </>
+            )}
           </h2>
 
-          <p className="text-slate-600 leading-relaxed">
-            Book professional OQOOD and TAS systems training. Other DLD systems will
-            be available soon.
+          <p className="text-slate-400 leading-relaxed">
+            {isAr
+              ? "أرسل طلب التدريب أو الإرشاد الخاص بك وحدد الإجراءات التي تحتاج إلى دعم فيها."
+              : "Submit your training or guidance request and tell us what procedures you need support with."}
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-slate-200">
-
+        <div className="bg-[#0c1220]/95 rounded-[2rem] p-5 sm:p-8 shadow-[0_0_50px_rgba(200,146,46,0.08)] border border-[#C8922E]/15">
           {step === 1 && (
             <>
-              <label className="font-semibold text-[#0b4f6c]">
-                System to be Trained *
+              <label className={labelClass}>
+                {isAr ? "النظام المطلوب للتدريب *" : "System to be Trained *"}
               </label>
 
               <select
@@ -257,13 +325,15 @@ export default function TrainingSection() {
                 value={formData.selectedSystem}
                 onChange={handleChange}
                 required
-                className="w-full mt-2 p-4 rounded-xl border border-slate-300"
+                className={`${selectClass} mt-2`}
               >
-                <option value="">Please Select</option>
+                <option value="">
+                  {isAr ? "يرجى الاختيار" : "Please Select"}
+                </option>
                 <option value="OQOOD">OQOOD</option>
                 <option value="TAS">TAS</option>
                 <option value="BOTH">
-                  BOTH (OQOOD & TAS)
+                  {isAr ? "كلاهما OQOOD و TAS" : "BOTH (OQOOD & TAS)"}
                 </option>
               </select>
 
@@ -272,17 +342,21 @@ export default function TrainingSection() {
 
               {formData.selectedSystem && (
                 <div className="mt-6">
-                  <label className="font-semibold text-[#0b4f6c]">
-                    Other Procedure
+                  <label className={labelClass}>
+                    {isAr ? "إجراء آخر" : "Other Procedure"}
                   </label>
 
                   <textarea
                     name="otherProcedure"
                     value={formData.otherProcedure}
                     onChange={handleChange}
-                    placeholder="Add any other procedure type here..."
+                    placeholder={
+                      isAr
+                        ? "أضف أي إجراء آخر هنا..."
+                        : "Add any other procedure type here..."
+                    }
                     rows="4"
-                    className="w-full mt-2 p-4 rounded-xl border border-slate-300"
+                    className={`${inputClass} mt-2`}
                   />
                 </div>
               )}
@@ -290,17 +364,17 @@ export default function TrainingSection() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-full mt-8 bg-[#1E293B] hover:bg-slate-800 text-white py-4 rounded-xl font-bold text-lg"
+                className="w-full mt-8 bg-[#C8922E] hover:bg-[#D6A84B] text-black py-4 rounded-xl font-black text-lg transition shadow-[0_0_28px_rgba(200,146,46,0.25)]"
               >
-                Next
+                {isAr ? "التالي" : "Next"}
               </button>
             </>
           )}
 
           {step === 2 && (
             <form onSubmit={handleSubmit} className="space-y-5">
-              <label className="font-semibold text-[#0b4f6c]">
-                Trainer Type *
+              <label className={labelClass}>
+                {isAr ? "نوع المتدرب *" : "Trainer Type *"}
               </label>
 
               <select
@@ -308,87 +382,108 @@ export default function TrainingSection() {
                 value={formData.traineeType}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl border border-slate-300"
+                className={selectClass}
               >
-                <option value="">Please Select</option>
+                <option value="">
+                  {isAr ? "يرجى الاختيار" : "Please Select"}
+                </option>
 
                 <option value="Individual Trainer">
-                  Individual Trainer
+                  {isAr ? "متدرب فردي" : "Individual Trainer"}
                 </option>
 
                 <option value="Development Company Trainer">
-                  Trainer from Development Company
+                  {isAr
+                    ? "متدرب من شركة تطوير عقاري"
+                    : "Trainer from Development Company"}
                 </option>
               </select>
 
-              {formData.traineeType ===
-                "Development Company Trainer" && (
-                  <input
-                    type="text"
-                    name="developmentCompany"
-                    placeholder="Development Company Name *"
-                    value={formData.developmentCompany}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-4 rounded-xl border border-slate-300"
-                  />
-                )}
+              {formData.traineeType === "Development Company Trainer" && (
+                <input
+                  type="text"
+                  name="developmentCompany"
+                  placeholder={
+                    isAr
+                      ? "اسم شركة التطوير العقاري *"
+                      : "Development Company Name *"
+                  }
+                  value={formData.developmentCompany}
+                  onChange={handleChange}
+                  required
+                  className={inputClass}
+                />
+              )}
 
               <input
                 type="text"
                 name="fullName"
-                placeholder="Full Name *"
+                placeholder={isAr ? "الاسم الكامل *" : "Full Name *"}
                 value={formData.fullName}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl border border-slate-300"
+                className={inputClass}
               />
 
               <input
                 type="email"
                 name="email"
-                placeholder="Email Address *"
+                placeholder={isAr ? "البريد الإلكتروني *" : "Email Address *"}
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl border border-slate-300"
+                className={inputClass}
               />
+
               <input
                 type="tel"
                 name="phone"
-                placeholder="Phone Number *"
+                placeholder={
+                  isAr
+                    ? "رقم الهاتف - 10 أرقام *"
+                    : "Phone Number - 10 digits *"
+                }
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={handlePhoneChange}
                 required
-                className="w-full p-4 rounded-xl border border-slate-300"
+                maxLength="10"
+                className={inputClass}
               />
 
               <input
                 type="text"
                 name="eid"
-                placeholder="EID Number *"
+                placeholder={
+                  isAr ? "784-xxxx-xxxxxxx-x *" : "EID: 784-xxxx-xxxxxxx-x *"
+                }
                 value={formData.eid}
-                onChange={handleChange}
+                onChange={handleEidChange}
                 required
-                className="w-full p-4 rounded-xl border border-slate-300"
+                maxLength="18"
+                className={inputClass}
               />
 
-
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="w-full bg-slate-300 hover:bg-slate-400 text-slate-800 py-4 rounded-xl font-bold"
+                  className="w-full bg-white/10 hover:bg-white/15 text-white py-4 rounded-xl font-black border border-white/10 transition"
                 >
-                  Back
+                  {isAr ? "رجوع" : "Back"}
                 </button>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#0b4f6c] hover:bg-[#08384d] text-white py-4 rounded-xl font-bold"
+                  className="w-full bg-[#C8922E] hover:bg-[#D6A84B] disabled:opacity-60 text-black py-4 rounded-xl font-black transition shadow-[0_0_28px_rgba(200,146,46,0.25)]"
                 >
-                  {loading ? "Submitting..." : "Submit Request"}
+                  {loading
+                    ? isAr
+                      ? "جارٍ الإرسال..."
+                      : "Submitting..."
+                    : isAr
+                    ? "إرسال الطلب"
+                    : "Submit Request"}
                 </button>
               </div>
             </form>

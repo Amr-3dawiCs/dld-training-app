@@ -1,113 +1,184 @@
-import dldLogo from "../components/DLDLogos.jpg";
+import { motion } from "framer-motion";
+import oqoodLogo from "../assets/oqoodicon.png";
+import { Landmark, Hourglass } from "lucide-react";
 
-export default function HeroSection() {
+export default function HeroSection({ language }) {
+  const isAr = language === "ar";
+
   return (
     <section
       id="home"
-      className="relative pt-28 pb-16 sm:pt-32 sm:pb-24 overflow-hidden"
+      dir={isAr ? "rtl" : "ltr"}
+      className="relative min-h-screen pt-[88px] overflow-hidden bg-[#070b14]"
     >
-      {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="hidden sm:block absolute inset-0 bg-cover bg-center scale-110"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop')",
+            "url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop')",
         }}
       />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/90" />
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-[#F8FAFC]/95 to-[#EEE7F7]/80" />
+      <div
+        className="sm:hidden absolute inset-0 bg-cover bg-center scale-125"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop')",
+          backgroundPosition: "center top",
+        }}
+      />
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 items-center">
-        {/* LEFT CONTENT */}
-        <div>
-          <span className="inline-flex mb-5 px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-sm font-semibold shadow-sm">
-            Professional DLD System Training
-          </span>
+      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/25 to-[#050812]/75" />
+      <div
+        className={`absolute inset-0 ${
+          isAr
+            ? "sm:bg-gradient-to-l sm:from-[#050812]/85 sm:via-[#070b14]/35 sm:to-transparent"
+            : "sm:bg-gradient-to-r sm:from-[#050812]/85 sm:via-[#070b14]/35 sm:to-transparent"
+        }`}
+      />
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E293B] leading-tight mb-5">
-            DLD Systems Training Platform
+      <div
+        className={`relative max-w-7xl mx-auto px-5 sm:px-6 py-14 sm:py-20 lg:py-28 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center ${
+          isAr ? "text-right" : "text-left"
+        }`}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className={`text-center ${isAr ? "lg:text-right" : "lg:text-left"}`}
+        >
+          <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-black tracking-wide text-[#C8922E]">
+            <span className="w-2 h-2 rounded-full bg-[#C8922E]" />
+            {isAr
+              ? "تدريب احترافي لأنظمة دائرة الأراضي"
+              : "PROFESSIONAL DLD SYSTEM TRAINING"}
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.15] mb-5 max-w-3xl">
+            {isAr
+              ? "منصة تدريب وإرشاد أنظمة دائرة الأراضي"
+              : "DLD Systems Training Platform"}
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8">
-            Submit organized training requests for OQOOD and TAS, select the
-            required modules, and receive automatic confirmation by email.
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight mb-6 max-w-3xl">
+            {isAr ? (
+              <>
+                <span className="text-[#6B3FA0] drop-shadow-[0_0_12px_rgba(107,63,160,0.45)]">
+                  OQOOD
+                </span>{" "}
+                <span className="text-white">و</span>{" "}
+                <span className="text-[#E74C3C] drop-shadow-[0_0_12px_rgba(231,76,60,0.45)]">
+                  TAS
+                </span>{" "}
+                <span className="text-white">دعم وإرشاد</span>
+              </>
+            ) : (
+              <>
+                <span className="text-[#6B3FA0] drop-shadow-[0_0_12px_rgba(107,63,160,0.45)]">
+                  OQOOD
+                </span>{" "}
+                <span className="text-white">&</span>{" "}
+                <span className="text-[#E74C3C] drop-shadow-[0_0_12px_rgba(231,76,60,0.45)]">
+                  TAS
+                </span>{" "}
+                Guidance & Support
+              </>
+            )}
+          </h2>
+
+          <p
+            className={`text-slate-200 leading-relaxed text-base sm:text-lg max-w-2xl mb-8 ${
+              isAr ? "mx-auto lg:mr-0 lg:ml-auto" : "mx-auto lg:mx-0"
+            }`}
+          >
+            {isAr
+              ? "منصة احترافية لمساعدة المستخدمين في التدريب والإرشاد على إجراءات وأنظمة OQOOD و TAS مع إرسال الطلبات بشكل منظم وسهل."
+              : "Professional platform helping users with OQOOD and TAS training, guidance, and workflow support through organized request submissions."}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div
+            className={`flex flex-col sm:flex-row gap-4 justify-center ${
+              isAr ? "lg:justify-end" : "lg:justify-start"
+            }`}
+          >
             <a
               href="#training"
-              className="w-full sm:w-auto text-center bg-[#1E293B] hover:bg-slate-800 text-white px-7 py-3 rounded-xl font-bold transition shadow-md"
+              className="inline-flex items-center justify-center gap-2 bg-[#C8922E] hover:bg-[#D6A84B] text-black px-7 py-4 rounded-xl font-black transition shadow-[0_0_28px_rgba(200,146,46,0.35)]"
             >
-              Book Training
+              {isAr ? "احجز تدريب ↓" : "Book Training ↓"}
             </a>
 
             <a
               href="#about"
-              className="w-full sm:w-auto text-center bg-white hover:bg-slate-50 text-[#1E293B] px-7 py-3 rounded-xl font-bold border border-slate-300 transition"
+              className="inline-flex items-center justify-center gap-2 border border-white/20 bg-white/5 hover:bg-white/10 text-white px-7 py-4 rounded-xl font-bold transition"
             >
-              Learn More
+              {isAr ? "معرفة المزيد" : "Learn More"}
             </a>
           </div>
-        </div>
+        </motion.div>
 
-        {/* RIGHT CARD */}
-        <div className="bg-white/95 rounded-3xl p-5 sm:p-7 shadow-xl border border-slate-200">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <img
-              src={dldLogo}
-              alt="Dubai Land Department"
-              className="h-20 sm:h-15 object-contain"
-            />
-
-            <div>
-              <h3 className="text-xl sm:text-2xl font-black text-[#1E293B]">
-                Dubai Land Dept. Systems
-              </h3>
-
-              {/* <p className="text-sm text-slate-500 mt-1">
-                DLD Systems
-              </p> */}
-            </div>
-          </div>
-
-          {/* OQOOD */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="rounded-3xl bg-[#101625]/80 border border-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-8 lg:p-10"
+        >
           <div className="space-y-4">
-            <div className="p-5 rounded-2xl bg-[#EEE7F7] border border-[#6B3FA0]/30 hover:shadow-md transition">
-              <h4 className="text-lg font-black text-[#6B3FA0]">
-                OQOOD
-              </h4>
+            <div className="rounded-2xl bg-[#0d1424] border border-[#6B3FA0]/40 p-5 sm:p-6 hover:border-[#6B3FA0]/70 transition">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <img
+                    src={oqoodLogo}
+                    alt="OQOOD"
+                    className="w-8 h-8 object-contain"
+                  />
+                </div>
 
-              <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                Procedures, inquiries, reports, registrations, and workflows.
+                <h3 className="text-[#6B3FA0] font-black text-xl">OQOOD</h3>
+              </div>
+
+              <p className="text-slate-400 text-sm leading-relaxed">
+                {isAr
+                  ? "الإجراءات، الاستفسارات، التقارير، التسجيلات، وإدارة سير العمل."
+                  : "Procedures, inquiries, reports, registrations, and workflow management."}
               </p>
             </div>
 
-            {/* TAS */}
-            <div className="p-5 rounded-2xl bg-[#FDECEC] border border-[#A32116]/30 hover:shadow-md transition">
-              <h4 className="text-lg font-black text-[#A32116]">
-                TAS
-              </h4>
+            <div className="rounded-2xl bg-[#0d1424] border border-[#A32116]/40 p-5 sm:p-6 hover:border-[#A32116]/70 transition">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <Landmark size={24} className="text-[#A32116]" />
+                </div>
 
-              <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                Trust account requests, financial requests, and payment plans.
+                <h3 className="text-[#A32116] font-black text-xl">TAS</h3>
+              </div>
+
+              <p className="text-slate-400 text-sm leading-relaxed">
+                {isAr
+                  ? "حسابات الضمان، الطلبات المالية، خطط الدفع، وإدارة المستفيدين."
+                  : "Trust accounts, financial requests, payment plans, and beneficiary management."}
               </p>
             </div>
 
-            {/* Coming Soon */}
-            <div className="p-5 rounded-2xl bg-slate-50 border border-dashed border-slate-300">
-              <h4 className="text-lg font-black text-slate-500">
-                Coming Soon
-              </h4>
+            <div className="rounded-2xl bg-[#0d1424]/70 border border-dashed border-[#C8922E]/30 p-5 sm:p-6 hover:border-[#C8922E]/60 transition">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <Hourglass size={24} className="text-[#C8922E]" />
+                </div>
 
-              <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                <h3 className="text-[#C8922E] font-black text-xl">
+                  {isAr ? "قريباً" : "Coming Soon"}
+                </h3>
+              </div>
+
+              <p className="text-slate-500 text-sm leading-relaxed">
                 Dubai REST, Ejari, Trakheesi, Mollak, RDC, Dubai Broker, TABU.
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
