@@ -8,6 +8,9 @@ import ServicesSection from "./components/ServicesSection";
 import TrainingSection from "./components/TrainingSection";
 import FAQSection from "./components/FAQSection";
 import WhatsAppButton from "./components/WhatsAppButton";
+import TrustStatsSection from "./components/TrustStatsSection";
+import LearningPathSection from "./components/LearningPathSection";
+import AIAssistantPreview from "./components/AIAssistantPreview";
 import Footer from "./components/Footer";
 
 function App() {
@@ -20,13 +23,15 @@ function App() {
     >
       <Navbar language={language} setLanguage={setLanguage} />
       <HeroSection language={language} />
+      <TrustStatsSection language={language} />
       <BundlesSection language={language} />
       <AboutSection language={language} />
+      <LearningPathSection language={language} />
       <SubscriptionSection language={language} />
       <ServicesSection language={language} />
+      <AIAssistantPreview language={language} />
       <TrainingSection language={language} />
       <FAQSection language={language} />
-      <WhatsAppButton />
       <Footer language={language} />
     </div>
   );
